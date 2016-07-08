@@ -15,7 +15,6 @@
    * [创建](image/create.md)
    * [存出和载入](image/save_load.md)
    * [移除](image/rmi.md)
-   * [实现原理](image/internal.md)
 * [容器](container/README.md)
    * [启动](container/run.md)
    * [守护态运行](container/daemon.md)
