@@ -9,9 +9,6 @@
    * [容器](basic_concept/container.md)
    * [仓库](basic_concept/repository.md)
 * [安装](install/README.md)
-   * [Ubuntu](install/ubuntu.md)
-   * [CentOS](install/centos.md)
-   * [Debian](install/debian.md)
 * [镜像](image/README.md)
    * [获取镜像](image/pull.md)
    * [列出](image/list.md)
@@ -126,4 +123,3 @@
    * [WordPress](appendix_repo/wordpress.md)
    * [Node.js](appendix_repo/nodejs.md)
 * [附录三：有用的资源](appendix_resources/README.md)
-

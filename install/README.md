@@ -1,2 +1,21 @@
 # 安装
-官方网站上有各种环境下的 [安装指南](https://docs.docker.com/installation/#installation)，这里主要介绍下Ubuntu、CentOS和Debian系列的安装。
+
+## Linux
+
+在Ubuntu和CentOS上可以执行如下指令快速安装
+
+```
+curl -fsSL https://get.docker.com/ | sh
+```
+
+## MacOS
+
+可以下载安装包安装
+
+https://www.docker.com/products/docker#/mac
+
+## Windows
+
+要求Window 10 64bit，可以下载安装包安装
+
+https://www.docker.com/products/docker#/windows
