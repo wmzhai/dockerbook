@@ -73,6 +73,7 @@ Image 2318d26665ef already pushed, skipping
 Image ba5877dc9bec already pushed, skipping
 Pushing tag for rev [ba5877dc9bec] on {http://192.168.7.26:5000/v1/repositories/test/tags/latest}
 ```
+
 用 curl 查看仓库中的镜像。
 ```
 $ curl http://192.168.7.26:5000/v1/search
