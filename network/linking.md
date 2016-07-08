@@ -1,4 +1,5 @@
 ## 容器互联
+
 容器的连接（linking）系统是除了端口映射外，另一种跟容器中应用交互的方式。
 
 该系统会在源和接收容器之间创建一个隧道，接收容器可以看到源容器指定的信息。
@@ -15,32 +16,16 @@
 $ sudo docker run -d -P --name web training/webapp python app.py
 ```
 
-使用 `docker ps` 来验证设定的命名。
-```
-$ sudo docker ps -l
-CONTAINER ID  IMAGE                  COMMAND        CREATED       STATUS       PORTS                    NAMES
-aed84ee21bde  training/webapp:latest python app.py  12 hours ago  Up 2 seconds 0.0.0.0:49154->5000/tcp  web
-```
-也可以使用 `docker inspect` 来查看容器的名字
-```
-$ sudo docker inspect -f "{{ .Name }}" aed84ee21bde
-/web
-```
-注意：容器的名称是唯一的。如果已经命名了一个叫 web 的容器，当你要再次使用 web 这个名称的时候，需要先用`docker rm` 来删除之前创建的同名容器。
+注意：容器的名称是唯一的。如果已经命名了一个叫 web 的容器，当你要再次使用 web 这个名称的时候，需要先用`docker rm` 来删除之前创建的同名容器。在执行 `docker run` 的时候如果添加 `--rm` 标记，则容器在终止后会立刻删除。注意，`--rm` 和 `-d` 参数不能同时使用。
 
-在执行 `docker run` 的时候如果添加 `--rm` 标记，则容器在终止后会立刻删除。注意，`--rm` 和 `-d` 参数不能同时使用。
-
-###容器互联
+### 容器互联
 使用 `--link` 参数可以让容器之间安全的进行交互。
 
 下面先创建一个新的数据库容器。
 ```
 $ sudo docker run -d --name db training/postgres
 ```
-删除之前创建的 web 容器
-```
-$ docker rm -f web
-```
+
 然后创建一个新的 web 容器，并将它连接到 db 容器
 ```
 $ sudo docker run -d -P --name web --link db:db training/webapp python app.py
@@ -58,7 +43,7 @@ aed84ee21bde  training/webapp:latest    python app.py         16 hours ago      
 ```
 可以看到自定义命名的容器，db 和 web，db 容器的 names 列有 db 也有 web/db。这表示 web 容器链接到 db 容器，web 容器将被允许访问 db 容器的信息。
 
-Docker 在两个互联的容器之间创建了一个安全隧道，而且不用映射它们的端口到宿主主机上。在启动 db 容器的时候并没有使用 `-p` 和 `-P` 标记，从而避免了暴露数据库端口到外部网络上。
+Docker 在两个互联的容器之间创建了一个安全隧道，而且**不用映射它们的端口到宿主主机上**。在启动 db 容器的时候并没有使用 `-p` 和 `-P` 标记，从而避免了暴露数据库端口到外部网络上。
 
 Docker 通过 2 种方式为容器公开连接信息：
 * 环境变量
@@ -97,6 +82,7 @@ PING db (172.17.0.5): 48 data bytes
 56 bytes from 172.17.0.5: icmp_seq=2 ttl=64 time=0.256 ms
 ```
 用 ping 来测试db容器，它会解析成 `172.17.0.5`。
-*注意：官方的 ubuntu 镜像默认没有安装 ping，需要自行安装。
+
+*注意：官方的 ubuntu 镜像默认没有安装 ping，需要自行安装。**
 
 用户可以链接多个父容器到子容器，比如可以链接多个 web 到 db 容器上。

@@ -1,12 +1,13 @@
 ## 外部访问容器
+
 容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过 `-P` 或 `-p` 参数来指定端口映射。
 
 当使用 -P 标记时，Docker 会随机映射一个 `49000~49900` 的端口到内部容器开放的网络端口。
 
 使用 `docker ps` 可以看到，本地主机的 49155 被映射到了容器的 5000 端口。此时访问本机的 49155 端口即可访问容器内 web 应用提供的界面。
 ```
-$ sudo docker run -d -P training/webapp python app.py
-$ sudo docker ps -l
+$ docker run -d -P training/webapp python app.py
+$ docker ps -l
 CONTAINER ID  IMAGE                   COMMAND       CREATED        STATUS        PORTS                    NAMES
 bc533791f3f5  training/webapp:latest  python app.py 5 seconds ago  Up 2 seconds  0.0.0.0:49155->5000/tcp  nostalgic_morse
 ```
