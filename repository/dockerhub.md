@@ -1,4 +1,5 @@
 ## Docker Hub
+
 目前 Docker 官方维护了一个公共仓库 [Docker Hub](https://hub.docker.com/)，其中已经包括了超过 15,000 的镜像。大部分需求，都可以通过在 Docker Hub 中直接下载镜像来实现。
 
 ### 登录
@@ -28,20 +29,11 @@ tutum/centos-6.4                                DEPRECATED. Use tutum/centos:6.4
 
 另外，在查找的时候通过 `-s N` 参数可以指定仅显示评价为 `N` 星以上的镜像。
 
-下载官方 centos 镜像到本地。
-```
-$ sudo docker pull centos
-Pulling repository centos
-0b443ba03958: Download complete
-539c0211cd76: Download complete
-511136ea3c5a: Download complete
-7064731afe90: Download complete
-```
 用户也可以在登录后通过 `docker push` 命令来将镜像推送到 Docker Hub。
 
 ### 自动创建
 自动创建（Automated Builds）功能对于需要经常升级镜像内程序来说，十分方便。
-有时候，用户创建了镜像，安装了某个软件，如果软件发布新版本则需要手动更新镜像。。
+有时候，用户创建了镜像，安装了某个软件，如果软件发布新版本则需要手动更新镜像。
 
 而自动创建允许用户通过 Docker Hub 指定跟踪一个目标网站（目前支持 [GitHub](https://github.org) 或 [BitBucket](https://bitbucket.org)）上的项目，一旦项目发生新的提交，则自动执行创建。
 
