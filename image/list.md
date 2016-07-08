@@ -1,7 +1,7 @@
 ## 列出本地镜像
 使用 `docker images` 显示本地已有的镜像。
 ```
-$ sudo docker images
+$ docker images
 REPOSITORY       TAG      IMAGE ID      CREATED      VIRTUAL SIZE
 ubuntu           12.04    74fe38d11401  4 weeks ago  209.6 MB
 ubuntu           precise  74fe38d11401  4 weeks ago  209.6 MB
@@ -15,7 +15,7 @@ ubuntu           trusty   99ec81b80c55  4 weeks ago  266 MB
 
 * 来自于哪个仓库，比如 ubuntu
 * 镜像的标记，比如 14.04
-* 它的 `ID` 号（唯一）
+* 它的唯一 `ID`
 * 创建时间
 * 镜像大小
 
