@@ -1,10 +1,6 @@
-# Docker Compose 项目
+# Docker Compose
 
-Docker Compose 是 Docker 官方编排（Orchestration）项目之一，负责快速在集群中部署分布式应用。
-
-
-
-Compose用来定义和运行多容器的Docker应用。可以使用一个compose文件来配置应用的服务，然后使用一个指令来创建和启动所有文件。
+Docker Compose 是 Docker 官方编排（Orchestration）项目之一，负责快速在集群中部署分布式应用。Compose用来定义和运行多容器的Docker应用。可以使用一个compose文件来配置应用的服务，然后使用一个指令来创建和启动所有文件。
 
 一般通过3步来使用Compose
 1. 使用Dockerfile来定义app的环境，从而可以被复制
