@@ -8,7 +8,8 @@ Docker 包括三个基本概念
 理解了这三个概念，就理解了 Docker 的整个生命周期。
 
 ### Docker 镜像
-Docker 镜像（Image）就是一个只读的模板。
+
+Docker 镜像（Image）就是一个只读的模板，是Docker生命周期中的“构建”阶段。
 
 例如：一个镜像可以包含一个完整的 ubuntu 操作系统环境，里面仅安装了 Apache 或用户需要的其它应用程序。
 
