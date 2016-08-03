@@ -14,6 +14,24 @@ curl -fsSL https://get.docker.com/ | sh
 sudo usermod -aG docker username
 ```
 
+### Ubuntu 1604清华镜像安装
+
+首先信任 Docker 的 GPG 公钥:
+```
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+```
+
+然后添加源
+```
+echo "deb https://mirrors.tuna.tsinghua.edu.cn/docker/apt/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+```
+
+最后安装
+```
+sudo apt-get update
+sudo apt-get install docker-engine
+```
+
 ### MacOS
 
 可以下载安装包安装
