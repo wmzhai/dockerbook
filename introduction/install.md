@@ -1,6 +1,6 @@
 ## 安装Docker
 
-### Linux
+### Linux通用安装
 
 在Ubuntu和CentOS上可以执行如下指令快速安装
 
@@ -14,7 +14,9 @@ curl -fsSL https://get.docker.com/ | sh
 sudo usermod -aG docker username
 ```
 
-### Ubuntu 1604清华镜像安装
+### 清华镜像安装
+
+Ubuntu 1604如下，其余可以参考[安装说明](https://mirrors.tuna.tsinghua.edu.cn/help/docker/)
 
 首先信任 Docker 的 GPG 公钥:
 ```
