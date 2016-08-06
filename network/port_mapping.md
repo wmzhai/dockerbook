@@ -1,58 +1,43 @@
-## 外部访问容器
+## 映射容器端口到宿主主机的实现
 
-容器中可以运行一些网络应用，要让外部也可以访问这些应用，可以通过 `-P` 或 `-p` 参数来指定端口映射。
+默认情况下，容器可以主动访问到外部网络的连接，但是外部网络无法访问到容器。
+### 容器访问外部实现
+容器所有到外部网络的连接，源地址都会被NAT成本地系统的IP地址。这是使用 `iptables` 的源地址伪装操作实现的。
 
-当使用 -P 标记时，Docker 会随机映射一个 `49000~49900` 的端口到内部容器开放的网络端口。
+查看主机的 NAT 规则。
+```
+$ sudo iptables -t nat -nL
+...
+Chain POSTROUTING (policy ACCEPT)
+target     prot opt source               destination
+MASQUERADE  all  --  172.17.0.0/16       !172.17.0.0/16
+...
+```
+其中，上述规则将所有源地址在 `172.17.0.0/16` 网段，目标地址为其他网段（外部网络）的流量动态伪装为从系统网卡发出。MASQUERADE 跟传统 SNAT 的好处是它能动态从网卡获取地址。
 
-使用 `docker ps` 可以看到，本地主机的 49155 被映射到了容器的 5000 端口。此时访问本机的 49155 端口即可访问容器内 web 应用提供的界面。
+### 外部访问容器实现
+
+容器允许外部访问，可以在 `docker run` 时候通过 `-p` 或 `-P` 参数来启用。
+
+不管用那种办法，其实也是在本地的 `iptable` 的 nat 表中添加相应的规则。
+
+使用 `-P` 时：
 ```
-$ docker run -d -P training/webapp python app.py
-$ docker ps -l
-CONTAINER ID  IMAGE                   COMMAND       CREATED        STATUS        PORTS                    NAMES
-bc533791f3f5  training/webapp:latest  python app.py 5 seconds ago  Up 2 seconds  0.0.0.0:49155->5000/tcp  nostalgic_morse
-```
-同样的，可以通过 `docker logs` 命令来查看应用的信息。
-```
-$ sudo docker logs -f nostalgic_morse
-* Running on http://0.0.0.0:5000/
-10.0.2.2 - - [23/May/2014 20:16:31] "GET / HTTP/1.1" 200 -
-10.0.2.2 - - [23/May/2014 20:16:31] "GET /favicon.ico HTTP/1.1" 404 -
+$ iptables -t nat -nL
+...
+Chain DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:49153 to:172.17.0.2:80
 ```
 
--p（小写的）则可以指定要映射的端口，并且，在一个指定端口上只可以绑定一个容器。支持的格式有 `ip:hostPort:containerPort | ip::containerPort | hostPort:containerPort`。
-
-### 映射所有接口地址
-使用 `hostPort:containerPort` 格式本地的 5000 端口映射到容器的 5000 端口，可以执行
+使用 `-p 80:80` 时：
 ```
-$ sudo docker run -d -p 5000:5000 training/webapp python app.py
-```
-此时默认会绑定本地所有接口上的所有地址。
-
-### 映射到指定地址的指定端口
-可以使用 `ip:hostPort:containerPort` 格式指定映射使用一个特定地址，比如 localhost 地址 127.0.0.1
-```
-$ sudo docker run -d -p 127.0.0.1:5000:5000 training/webapp python app.py
-```
-### 映射到指定地址的任意端口
-使用 `ip::containerPort` 绑定 localhost 的任意端口到容器的 5000 端口，本地主机会自动分配一个端口。
-```
-$ sudo docker run -d -p 127.0.0.1::5000 training/webapp python app.py
-```
-还可以使用 udp 标记来指定 udp 端口
-```
-$ sudo docker run -d -p 127.0.0.1:5000:5000/udp training/webapp python app.py
-```
-### 查看映射端口配置
-使用 `docker port` 来查看当前映射的端口配置，也可以查看到绑定的地址
-```
-$ docker port nostalgic_morse 5000
-127.0.0.1:49155.
+$ iptables -t nat -nL
+Chain DOCKER (2 references)
+target     prot opt source               destination
+DNAT       tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80 to:172.17.0.2:80
 ```
 注意：
-* 容器有自己的内部网络和 ip 地址（使用 `docker inspect` 可以获取所有的变量，Docker 还可以有一个可变的网络配置。）
-* -p 标记可以多次使用来绑定多个端口
-
-例如
-```
-$ sudo docker run -d -p 5000:5000  -p 3000:80 training/webapp python app.py
-```
+* 这里的规则映射了 0.0.0.0，意味着将接受主机来自所有接口的流量。用户可以通过 `-p IP:host_port:container_port` 或 `-p
+IP::port` 来指定允许访问容器的主机上的 IP、接口等，以制定更严格的规则。
+* 如果希望永久绑定到某个固定的 IP 地址，可以在 Docker 配置文件 `/etc/default/docker` 中指定 `DOCKER_OPTS="--ip=IP_ADDRESS"`，之后重启 Docker 服务即可生效。
